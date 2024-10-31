@@ -1,0 +1,187 @@
+
+
+- - - - 1 - - - - Know pre requsit for learn mern
+pre : html css js react
+not require pefect : express mongo node...
+
+
+------------------------------------------------------------------------------------------------------
+
+
+- - - - 2 - - - - Project overview what are going to be created in project                                                        
+- admin panel with crud in mern and mongo with mongo altas
+
+
+------------------------------------------------------------------------------------------------------
+
+
+- - - - 3 - - - -   creating a server with express and managing routes
+pkg : npm i 
+init(get the flow of code)
+express(4 create server)
+nodemon(auto refresh when code change) 
+write command npm init to manage project or show the json file
+
+1 : import express in app 
+2 : create route with app.get and send response
+3 : run it at port with app.listen
+
+
+------------------------------------------------------------------------------------------------------
+
+
+- - - - 4 - - - -  seprating folder of routes for better code...
+1: create seprate folder for routes 
+2: write routes with express.router()
+3: export the routes
+
+4: in index.js import the route from new file
+5: add it in middleware : app.use("", router);
+
+
+------------------------------------------------------------------------------------------------------
+
+
+- - - - 5 - - - -  seprating controlers into another controlers folder => files
+basicaly there are three main files to controll get request urls
+
+1:controlers : here we write function body like what we have to do , and export them to routes
+
+2:router : here we get the routes and import controlers and redirect accroding to routes to controlers
+
+3: index.js   : here we import router and set it into middleware for use routes
+
+
+------------------------------------------------------------------------------------------------------
+
+
+- - - - 6 - - - -  sending post request to registration page using POSTMAN
+
+FOR SEND POST REQUEST
+1: GOTO postman change get to POST in left side of past url option
+2: Past url into url input where you want to send post request              (localhost:5000/registration)
+3: in postman goto body select row and json fill body as object { key:value }
+4: tap on send button the reques will sended and loged if u log it
+
+ FOR GET REQUEST AND LOG IT
+5: at route is your reques must be post not get change it to post  LIKE     (router.route("/registration").post(regisFun)) // not be get
+6: in index file add middleware app.use(express.json())                     // we have to add it if we want to pases json data to urls
+7: when you fire get reques the data will passed to registration controler in req.body , log it
+8: render it with res.json to show in postman console                       res.status(200).json({msg : req.body }) 
+
+
+------------------------------------------------------------------------------------------------------
+
+
+- - - - 7 - - - -  CONNECT BACKEND WITH MONGODB
+ 1: install npm mongoose and mongodb
+ 2: create folder utils > file db.js establish connection
+ 3: inner db.js file create function and pass connection string which establish connection with db and export it
+ // mongoose.connect("mongodb+srv://odedararaj4u:odedararaj4umongo@cluster0.y5tah.mongodb.net/userss?retryWrites=true&w=majority")
+ 4: and import it at index.js call it and add .the coze it is a promis    DBConncetion().then(()=>success)   // is connection is succes it logs
+ 
+
+------------------------------------------------------------------------------------------------------
+
+
+- - - - 8 - - - -  secure the connection string paswword with envirement variable
+1: install npm dotenv
+2: create .env file and write connection string in it
+3: at main index.js file import config function from env pkg and call it      config()
+4: now you can use env data with use of process.env.<variable name>
+
+
+
+------------------------------------------------------------------------------------------------------
+
+
+- - - - 9 - - - -  creating schema for registration  
+1: create folder and file : model=>userModel.js
+2: inner file import mongoose and create schema with mongoose.schema({})
+3: create collection and give it name with mongoose.model and export it      //const User = new mongoose.model("<collectionName>", <Schemaname>);
+
+
+
+------------------------------------------------------------------------------------------------------
+
+
+- - - - 10 - - - -  storing data into collection with postman
+1: in controlers or function body where we are getting post reques from postman destructure the data    // {mail,name} = req.body
+2:import mode from where u created shcema and model(collection)
+3:find if user is exist or not with findone method and imported model(collection)
+4: if user is not exist write code to create new document in collection : collectionName.crate({<req.body-data>})
+
+
+
+-----------------------------------------------------------------------------------------------------
+
+
+- - - - 11 - - - -  bycripting data and storing into db
+1: install pkg bcrypt.js 
+2: import bcrypt funcnality from pkg
+3: use bcypt.hash(passwor,10) method to bcript it and store it in variable
+
+// hashing the password...
+  //  const hashPassword = await bycript.hash(password, 10);
+
+
+  -----------------------------------------------------------------------------------------------------
+
+
+- - - - 12 - - - - secure user authantication with jwt
+- when user register & login give him token 
+    - when we have to allow perticuor portion access to perticulor user then we use jwt and create token store at client side and give site access acroding to token
+
+authantication: cheking is mail avalable on DB
+authorization : is avalable give it a permisons accroding to his role
+
+1: install pkg jsonwebtoken
+2: create method at models with use of userScema.method.<methodName>()=>{ // genrating token here}
+3: access this method at controlers with userCreated.<methodName>()
+
+
+  -----------------------------------------------------------------------------------------------------
+
+
+- - - - 13 - - - - adding login funcnality on /login route
+1:add /login route and there access mail and password
+2:check user is avalable on DB or not with findone method 
+3:check password is valid or not with bcrypt.compare(<EmailPasswor-from-findOne method>, <user-enterdPassword> ) method
+4:if password are same genrate token for it 
+
+
+
+  -----------------------------------------------------------------------------------------------------
+
+
+- - - - 14 - - - - Complating challange 
+1: creating function in schema
+2:accessing it in controllers to compare password
+
+
+  -----------------------------------------------------------------------------------------------------
+
+
+- - - - 15 - - - - registration page validition with zod packeg
+1: install zod pkg
+2: create schema with z.object({}) method in seprate folder validator=>auth-validator.js export schema
+3: create validator method in seprate folder middleware=>validator-middlewarejs 
+4:write code to compare your data with zod schema (by passing data to schema function schema.parseAsync(req.body))
+5:write code to do validition at route by passing scema into validition function
+            -----------
+  router.route("/registration").post(validate(registerSchema), registration);
+PROCESS : first it will take data and registerSchema to validate method
+- then it compare scema with data and throw error or response if data is valid it will create goto registration function and create user
+
+
+----------------------------------------------------------------------------------------------------
+
+
+- - - - 16 - - - - error handling with middleware
+- here when we have to pass  any error in response we are passing sepretly
+but now we are going to pass data at one function and it response an error
+
+- create function to handle error like error-middleware.js and retrive data innser it
+- at index.js create middleware and pass the errorMiddleware function inner it so when we have to throw error 
+then we just have to type next() and pass data inner it...
+ 
